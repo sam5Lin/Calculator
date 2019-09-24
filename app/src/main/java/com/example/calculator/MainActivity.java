@@ -14,21 +14,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private StringBuffer text;
     private StringBuffer result;
     private Button btn;
-    private int flag;//设置flag判断输入特殊符号的情况
-                    // 0:不能输入特殊符号 1：可以输入特殊符号 2：可以更改最后一个特殊符号 3:只能输入.
+    private int flag;
+    private boolean point_flag;//判断上一个符号是否是. ，如果是，就不能再加. ,如果不是,就可以加.
     /*
         flag
         0：只能输入数字  str = （0-9）
         1：可以输入数字符号 str = 1 ( （1-9） + - × / .)
         2：只可以输入. str = 5 / 0 (.)
+        3：可以输入（ + - × / .）
 
         AC之后返回0状态
         del之后
             如果str为空 返回状态0
             如果str最后一个为数字(1-9) 返回状态1
-            如果str最后一个为数字0 返回状态2
+            如果str最后一个为数字0 返回状态3
             如果str最后一个为. 返回状态0
             如果str最后一个为（ + - × / ）返回状态0
+        对于0
+            前面是除号，添加0，提示不能除于0，返回状态2
+            前面是数字，添加0，返回状态0
+            前面是特殊符号，添加0，返回状态2
+            前面没有，添加0，返回状态3
+        对于.
+            前面没有，不可以添加，保持原状态
+            前面是特殊符号，不可以添加，保持原状态
+            如果point_flag == false:
+                前面是数字，添加. ，point_flag = true，返回状态0
+            如果point_flag == true:
+                不可以添加，保持原状态
+        对于（+ - × /）
+            前面没有，不可以添加，保持原状态
+            前面是特殊符号，将最后一个符号更改为当前的符号，保持原状态
+            前面是数字，添加符号，返回状态0
+
+
      */
 
 
