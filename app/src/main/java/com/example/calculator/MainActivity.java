@@ -19,11 +19,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean point_flag;//判断上一个符号是否是. ，如果是，就不能再加. ,如果不是,就可以加.
     /*
         flag
-        0：只能输入数字  str = （0-9）
-        1：可以输入数字符号 str = 1 ( （0-9） + - × / .)
-        2：只可以输入. str = 5 / 0 (.)
-        3：可以输入（ + - × / .）
-        4：可以输入 (+ - x / (0-9))
+            0：只能输入数字  str = （0-9）
+            1：可以输入数字符号 str = 1 ( （0-9） + - × / .)
+            2：只可以输入. str = 5 / 0 (.)
+            3：可以输入（ + - × / . ）
+            4：可以输入 (+ - x / (0-9))
+
+        point_flag
+            false：当前的数字没有.
+            true：当前的数字有.
 
         AC之后返回0状态
         del之后
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.eight:
             case R.id.nine:
                 btn = findViewById(v.getId());
-                if(flag == 0 || flag == 1 || flag == 4){
+                if(flag == 0 || flag == 1 || flag == 4 || (flag == 3 && point_flag == true)){
                     text.append(btn.getText());
                     tv.setText(text);
                     flag = 1;
@@ -132,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             text.append("0");
                             tv.setText(text);
                             point_flag = true;
-                            flag = 0;
+                            flag = 4;
                             break;
                         }
                         else if(isCharacter(character)){
@@ -200,14 +204,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.del:
                 if(text.length() > 0){
-                    text.deleteCharAt(text.length()-1);
-                    tv.setText(text);
+                    char character = text.charAt(length - 1);
                     length -= 1;
+                    text.deleteCharAt(text.length()-1);
+                    if(isCharacter(character)){
+                        point_flag = findPreviousPoint(character);
+                    }
+
+                    tv.setText(text);
+
                     if(length == 0){
                         flag = 0;
                     }
                     else if(length > 0){
-                        char character = text.charAt(length - 1);
+                        character = text.charAt(length - 1);
                         if(isoneTonine(character)){
                             flag = 1;
                         }
@@ -260,5 +270,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return false;
     }
+
+    private int findPreviousCharacterIndex(){
+        for(int i = length - 1; i >= 0; i--){
+            if(isCharacter(text.charAt(i))){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private boolean findPreviousPoint(char c){
+        int index = findPreviousCharacterIndex();
+        if(index == -1){ //如果找不到上一个运算符
+            for(int i = length - 1; i >= 0; i--){
+                if(text.charAt(i) == '.'){  //如果之前已经有小数点
+                    return true;
+                }
+            }
+        }
+        else{//如果找到上一个运算符
+            for(int i = length - 1; i >= index; i--){
+                if(text.charAt(i) == '.'){  //如果之前已经有小数点
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
 
 }
