@@ -1,11 +1,17 @@
 package com.example.calculator;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.Stack;
+import java.util.Vector;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -208,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     length -= 1;
                     text.deleteCharAt(text.length()-1);
                     if(isCharacter(character)){
-                        point_flag = findPreviousPoint(character);
+                        point_flag = findPreviousPoint();
                     }
 
                     tv.setText(text);
@@ -236,7 +242,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.equal:
-                //
+                result = new StringBuffer(evaluate(text));
+                rs.setText(result);
                 break;
                 default:break;
         }
@@ -280,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return -1;
     }
 
-    private boolean findPreviousPoint(char c){
+    private boolean findPreviousPoint(){
         int index = findPreviousCharacterIndex();
         if(index == -1){ //如果找不到上一个运算符
             for(int i = length - 1; i >= 0; i--){
@@ -300,5 +307,82 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    /*
+    中序转后序
+     */
+    public  Vector<String> transform(StringBuffer str){
+
+        Vector<String> st = new Vector<>();
+        Stack<Character> ops = new Stack<>();    //运算符栈
+
+        String num_str = "";
+        for(int i = 0 ;i < str.length(); i++){
+            char ch = str.charAt(i);
+
+            if((ch >= '0' && ch <= '9') || ch == '.'){
+                num_str += ch;
+            }
+            else if(isCharacter(ch)){
+                st.add(num_str);
+                num_str = "";
+                while(true){
+                    if(ops.isEmpty()){
+                        ops.push(ch);
+                        break;
+                    }
+                    char pre = ops.peek();
+                    if((pre == '+' || pre == '-') || (ch == '×' || ch == '÷')){
+                        ops.push(ch);
+                        break;
+                    }
+                    st.add(String.valueOf(ops.pop()));
+                }
+            }
+        }
+        st.add(num_str);
+
+
+        while(!ops.isEmpty()){
+            st.add(String.valueOf(ops.pop()));
+        }
+        return st;
+    }
+
+
+
+    public String evaluate(StringBuffer str){
+        Vector<String> s = transform(str);    //中序表达式转换为后序表达式
+
+        Stack<BigDecimal> num = new Stack<>();
+        for(int i = 0; i < s.size(); i++){
+            String c = s.get(i);
+            if(!isCharacter(c.charAt(0))){
+                num.push(new BigDecimal(c));
+            }
+            else{
+
+                BigDecimal d1 = num.pop();
+                BigDecimal d2 = num.pop();
+                Log.e("e---------", d1+" "+d2+" "+d2.divide(d1).round(MathContext.DECIMAL32)+"" );
+                switch(c.charAt(0)){
+
+                    case '+':
+                        num.push(d1.add(d2));
+                        break;
+                    case '-':
+                        num.push(d2.subtract(d1));
+                        break;
+                    case '×':
+                        num.push(d1.multiply(d2));
+                        break;
+                    case '÷':
+                        num.push(d2.divide(d1).round(MathContext.DECIMAL32));
+                        break;
+                    default:break;
+                }
+            }
+        }
+        return num.pop().toString();
+    }
 
 }
