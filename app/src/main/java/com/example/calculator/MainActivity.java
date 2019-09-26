@@ -1,7 +1,6 @@
 package com.example.calculator;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -92,13 +90,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.sub).setOnClickListener(this);
         findViewById(R.id.equal).setOnClickListener(this);
 
+
         flag = 0;
         point_flag = false;
     }
 
     @Override
     public void onClick(View v){
-        rs.setText("");
         length = text.length();
         switch(v.getId()){
 
@@ -117,7 +115,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tv.setText(text);
                     flag = 1;
                 }
-
+                result = new StringBuffer(evaluate(text));
+                rs.setText(result);
                 break;
             case R.id.zero:
                 if(flag == 0 || flag == 1 || flag == 4){
@@ -125,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         char character = text.charAt(length - 1);
                         if(character == '÷'){
                             text.append("0");
+                            result.delete(0,result.length());
                             result.append("\n不能除于0");
                             tv.setText(text);
                             rs.setText(result);
@@ -136,27 +136,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             text.append("0");
                             tv.setText(text);
                             flag = 1;
-                            break;
+                            result = new StringBuffer(evaluate(text));
+                            rs.setText(result);
                         }
                         else if(character == '.'){
                             text.append("0");
                             tv.setText(text);
                             point_flag = true;
                             flag = 4;
-                            break;
+                            result = new StringBuffer(evaluate(text));
+                            rs.setText(result);
+
                         }
                         else if(isCharacter(character)){
                             text.append("0");
                             tv.setText(text);
                             flag = 3;
-                            break;
+                            result = new StringBuffer(evaluate(text));
+                            rs.setText(result);
                         }
                     }
                     else {
                         text.append("0");
                         tv.setText(text);
                         flag = 3;
-                        break;
+                        result = new StringBuffer(evaluate(text));
+                        rs.setText(result);
                     }
                 }
 
@@ -198,13 +203,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             point_flag = true;
                             flag = 0;
                             break;
+
                         }
                     }
                 }
+                result = new StringBuffer(evaluate(text));
+                rs.setText(result);
                 break;
             case R.id.AC:
                 text.delete(0,text.length());
                 tv.setText(text);
+                result = new StringBuffer("");
+                rs.setText(result);
                 point_flag = false;
                 flag = 0;
                 break;
@@ -238,11 +248,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             flag = 0;
                         }
                     }
+                    if(text.length() > 0){
+                        result = new StringBuffer(evaluate(text));
+                        rs.setText(result);
+                    }
+                    else{
+                        result = new StringBuffer("");
+                        rs.setText(result);
+                    }
+
                     break;
                 }
+
                 break;
             case R.id.equal:
                 result = new StringBuffer(evaluate(text));
+
+
+                if(result.toString().equals("不能除于0")){
+                    flag = 2;
+                }
+                else{
+                    text = result;
+                    tv.setText(text);
+                }
                 rs.setText(result);
                 break;
                 default:break;
@@ -311,12 +340,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     中序转后序
      */
     public  Vector<String> transform(StringBuffer str){
-
+        if(str.length() == 0){ //text为空
+            return null;
+        }
+        length = str.length();
+        if(isCharacter(str.charAt(str.length() - 1))){//最后一个为特殊字符
+            length -= 1;
+        }
         Vector<String> st = new Vector<>();
         Stack<Character> ops = new Stack<>();    //运算符栈
 
         String num_str = "";
-        for(int i = 0 ;i < str.length(); i++){
+        for(int i = 0 ;i < length ; i++){
             char ch = str.charAt(i);
 
             if((ch >= '0' && ch <= '9') || ch == '.'){
@@ -331,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     char pre = ops.peek();
-                    if((pre == '+' || pre == '-') || (ch == '×' || ch == '÷')){
+                    if((pre == '+' || pre == '-') && (ch == '×' || ch == '÷')){ //5+3-2
                         ops.push(ch);
                         break;
                     }
@@ -352,20 +387,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public String evaluate(StringBuffer str){
         Vector<String> s = transform(str);    //中序表达式转换为后序表达式
-
+        if(s == null){
+            return "";
+        }
         Stack<BigDecimal> num = new Stack<>();
         for(int i = 0; i < s.size(); i++){
             String c = s.get(i);
+
             if(!isCharacter(c.charAt(0))){
                 num.push(new BigDecimal(c));
             }
             else{
-
+                //Log.e("e------>", c + " ");
                 BigDecimal d1 = num.pop();
                 BigDecimal d2 = num.pop();
-                Log.e("e---------", d1+" "+d2+" "+d2.divide(d1).round(MathContext.DECIMAL32)+"" );
+                //Log.e("e------>", d1 + " ");
+               // Log.e("e------>", d2 + " ");
                 switch(c.charAt(0)){
-
                     case '+':
                         num.push(d1.add(d2));
                         break;
@@ -376,7 +414,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         num.push(d1.multiply(d2));
                         break;
                     case '÷':
-                        num.push(d2.divide(d1).round(MathContext.DECIMAL32));
+                        if(d1.doubleValue() != 0){
+
+                            if(d2.divide(d1,4, BigDecimal.ROUND_HALF_UP).doubleValue() == (d2.doubleValue() / d1.doubleValue())){
+                                num.push(new BigDecimal(d2.doubleValue() / d1.doubleValue()));
+                            }
+                            else {
+                                num.push(d2.divide(d1,4, BigDecimal.ROUND_HALF_UP));
+                            }
+                        }
+                        else{
+                            return "不能除于0";
+                        }
                         break;
                     default:break;
                 }
