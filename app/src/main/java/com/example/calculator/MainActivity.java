@@ -129,7 +129,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(character == '÷'){
                             text.append("0");
                             result.delete(0,result.length());
-                            result.append("\n不能除于0");
+                            result.append("不能除于0");
+
+                            Log.e("e----->", result+" ");
                             tv.setText(text);
                             rs.setText(result);
                             result.delete(0, result.length());
@@ -249,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             flag = 0;
                         }
                         else if(isCharacter(character)){
-                            flag = 0;
+                            flag = 1;
                         }
                     }
                     if(text.length() > 0){
