@@ -270,21 +270,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.equal:
                 result = new StringBuffer(evaluate(text));
 
-
+                Log.e("pointflag", point_flag+" ");
                 if(result.toString().equals("不能除于0")){
                     flag = 2;
+                    if(text.charAt(text.length() - 1) == '.'){
+                        flag = 0;
+                    }
                 }
                 else{
                     text = result;
                     tv.setText(text);
                     if(result.toString().equals("0")){
-                        flag = 0;
+                        flag = 1;
                     }
                 }
                 rs.setText(result);
+                point_flag = havePoint(result);
                 break;
                 default:break;
         }
+    }
+
+    private boolean havePoint(StringBuffer result){
+        for(int i = 0;i < result.length();i++){
+            if(result.charAt(i) == '.'){
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isDigital(char c){
@@ -416,12 +429,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 switch(c.charAt(0)){
                     case '+':
+
                         num.push(d1.add(d2));
                         break;
                     case '-':
+
                         num.push(d2.subtract(d1));
                         break;
                     case '×':
+
                         num.push(d1.multiply(d2));
                         break;
                     case '÷':
@@ -443,7 +459,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
-        return num.pop().toString();
+        return num.pop().stripTrailingZeros().toString();
+        //return num.pop().toString();
+
     }
 
 }
