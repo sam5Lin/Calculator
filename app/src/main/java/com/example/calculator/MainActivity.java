@@ -1,6 +1,7 @@
 package com.example.calculator;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         flag = 0;
         point_flag = false;
+
+
     }
 
     @Override
@@ -116,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     flag = 1;
                 }
                 result = new StringBuffer(evaluate(text));
+
                 rs.setText(result);
                 break;
             case R.id.zero:
@@ -271,6 +275,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else{
                     text = result;
                     tv.setText(text);
+                    if(result.toString().equals("0")){
+                        flag = 0;
+                    }
                 }
                 rs.setText(result);
                 break;
@@ -339,9 +346,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
     中序转后序
      */
-    public  Vector<String> transform(StringBuffer str){
-        if(str.length() == 0){ //text为空
+    public  Vector<String> transform(StringBuffer s){
+        if(s.length() == 0){ //text为空
             return null;
+        }
+        StringBuffer str = new StringBuffer(s);
+        if(str.charAt(0) == '-'){
+            str.insert(0,'0');
         }
         length = str.length();
         if(isCharacter(str.charAt(str.length() - 1))){//最后一个为特殊字符
@@ -383,8 +394,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return st;
     }
 
-
-
+    //计算
     public String evaluate(StringBuffer str){
         Vector<String> s = transform(str);    //中序表达式转换为后序表达式
         if(s == null){
@@ -398,11 +408,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 num.push(new BigDecimal(c));
             }
             else{
-                //Log.e("e------>", c + " ");
+
                 BigDecimal d1 = num.pop();
                 BigDecimal d2 = num.pop();
-                //Log.e("e------>", d1 + " ");
-               // Log.e("e------>", d2 + " ");
+
                 switch(c.charAt(0)){
                     case '+':
                         num.push(d1.add(d2));
@@ -414,13 +423,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         num.push(d1.multiply(d2));
                         break;
                     case '÷':
+
                         if(d1.doubleValue() != 0){
 
-                            if(d2.divide(d1,4, BigDecimal.ROUND_HALF_UP).doubleValue() == (d2.doubleValue() / d1.doubleValue())){
+                            if(d2.divide(d1,9, BigDecimal.ROUND_HALF_UP).doubleValue() == (d2.doubleValue() / d1.doubleValue())){
                                 num.push(new BigDecimal(d2.doubleValue() / d1.doubleValue()));
                             }
                             else {
-                                num.push(d2.divide(d1,4, BigDecimal.ROUND_HALF_UP));
+                                num.push(d2.divide(d1,9, BigDecimal.ROUND_HALF_UP));
                             }
                         }
                         else{

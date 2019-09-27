@@ -14,38 +14,45 @@
         android:layout_height="0dp"
         android:orientation="vertical">
         <TextView
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#87CEFF"
+            android:background="#5ab0f6"
             android:layout_marginBottom="0dp"
             android:gravity="right|center_vertical|bottom"
             android:paddingRight="20dp"
-            android:id="@+id/textField"/>
+            android:id="@+id/textField"
+            android:maxLines="1"
+            android:autoSizeMaxTextSize="90dp"
+            android:autoSizeTextType="uniform"
+            android:textColor="#ffffff"/>
         <TextView
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#87CEFF"
+            android:background="#5ab0f6"
             android:layout_marginBottom="0dp"
             android:gravity="right|center_vertical|bottom"
             android:paddingRight="20dp"
-            android:id="@+id/result"/>
+            android:id="@+id/result"
+            android:maxLines="1"
+            android:autoSizeMaxTextSize="35dp"
+            android:autoSizeTextType="uniform"
+            android:textColor="#f8f8ff"/>
     </LinearLayout>
 
 
     <LinearLayout
+
         android:layout_weight="3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal">
         <LinearLayout
-
             android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:stretchColumns="*"
-            android:background="#A1BBCC"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_weight="1"
@@ -54,6 +61,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -62,12 +70,14 @@
                     android:id="@+id/AC"
                     android:textSize="25dp"/>
                 <ImageButton
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_back"
                     android:id="@+id/del" />
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -83,6 +93,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -90,6 +101,7 @@
                     android:id="@+id/seven"
                     android:textSize="25dp"/>
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -97,6 +109,7 @@
                     android:id="@+id/eight"
                     android:textSize="25dp"/>
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -113,6 +126,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -120,6 +134,7 @@
                     android:id="@+id/four"
                     android:textSize="25dp"/>
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -127,6 +142,7 @@
                     android:id="@+id/five"
                     android:textSize="25dp"/>
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -144,6 +160,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -152,6 +169,7 @@
                     android:textSize="25dp"/>
 
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -159,6 +177,7 @@
                     android:id="@+id/two"
                     android:textSize="25dp"/>
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -176,6 +195,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -184,6 +204,7 @@
                     android:textSize="25dp"/>
 
                 <Button
+                    android:background="#fffff5"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -199,9 +220,10 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="#A1BBCC"
+
             android:orientation="vertical">
             <Button
+                android:background="#fffff5"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -210,6 +232,7 @@
                 android:textSize="25dp"/>
 
             <Button
+                android:background="#fffff5"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -218,6 +241,7 @@
                 android:textSize="25dp"/>
 
             <Button
+                android:background="#fffff5"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -230,9 +254,10 @@
                 android:layout_weight="2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:textColor="#000000"
+                android:textColor="#ffffff"
                 android:background="#FF7F00"
                 android:text="="
+
                 android:id="@+id/equal"
                 android:textSize="25dp"/>
         </LinearLayout>
