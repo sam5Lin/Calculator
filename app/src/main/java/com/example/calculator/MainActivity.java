@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     flag = 1;
                 }
                 result = new StringBuffer(evaluate(text));
-
+                Log.e("text/result--->", text+" "+result );
                 rs.setText(result);
                 break;
             case R.id.zero:
@@ -429,8 +429,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 switch(c.charAt(0)){
                     case '+':
+                        Log.e("e---->", d1.add(d2).intValue()+" "+ d1.doubleValue() / d2.doubleValue());
+                        if(d1.add(d2).intValue() == (int)(d1.doubleValue() / d2.doubleValue())){
+                            num.push(new BigDecimal(d1.add(d2).intValue()));
+                        }
+                        else{
+                            num.push(d1.add(d2));
+                        }
 
-                        num.push(d1.add(d2));
                         break;
                     case '-':
 
@@ -459,9 +465,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
-        return num.pop().stripTrailingZeros().toString();
+        String ss = replace(num.pop().toString());
+        Log.e("ss------>", ss+" " );
+        return ss;
         //return num.pop().toString();
 
+    }
+
+    public static String replace(String s){
+        if(null != s && s.indexOf(".") > 0){
+            s = s.replaceAll("0+?$", "");//去掉多余的0
+            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
+        }
+        return s;
     }
 
 }
