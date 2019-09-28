@@ -429,14 +429,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 switch(c.charAt(0)){
                     case '+':
-                        Log.e("e---->", d1.add(d2).intValue()+" "+ d1.doubleValue() / d2.doubleValue());
-                        if(d1.add(d2).intValue() == (int)(d1.doubleValue() / d2.doubleValue())){
-                            num.push(new BigDecimal(d1.add(d2).intValue()));
-                        }
-                        else{
-                            num.push(d1.add(d2));
-                        }
 
+                        num.push(d1.add(d2));
                         break;
                     case '-':
 
@@ -450,12 +444,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         if(d1.doubleValue() != 0){
 
-                            if(d2.divide(d1,9, BigDecimal.ROUND_HALF_UP).doubleValue() == (d2.doubleValue() / d1.doubleValue())){
-                                num.push(new BigDecimal(d2.doubleValue() / d1.doubleValue()));
-                            }
-                            else {
-                                num.push(d2.divide(d1,9, BigDecimal.ROUND_HALF_UP));
-                            }
+                            num.push(d2.divide(d1,9, BigDecimal.ROUND_HALF_UP));
                         }
                         else{
                             return "不能除于0";
@@ -466,7 +455,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         String ss = replace(num.pop().toString());
-        Log.e("ss------>", ss+" " );
+
         return ss;
         //return num.pop().toString();
 
